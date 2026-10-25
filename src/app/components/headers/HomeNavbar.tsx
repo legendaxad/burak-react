@@ -1,8 +1,9 @@
 import { Box, Button, Container, Stack } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import Basket from "./Basket";
 
-export function HomeNavbar() {
-  const authMember = false; // Replace with your authentication logic
+export default function HomeNavbar() {
+  const authMember = true; // Replace with your authentication logic
   return (
     <div className="home-navbar">
       <Container className="navbar-container">
@@ -42,6 +43,7 @@ export function HomeNavbar() {
                 Help
               </NavLink>
             </Box>
+            <Basket />
             {!authMember ? (
               <Box>
                 <Button variant="contained" className="login-button">
