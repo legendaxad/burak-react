@@ -1,19 +1,27 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import {createRoot} from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 import App from "./app/App";
 import reportWebVitals from "./reportWebVitals";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
 // @ts-ignore CSS is loaded by the bundler and has no TypeScript declaration.
 import "./css/index.css";
-
-ReactDOM.render(
+import theme from "./app/MaterialTheme";
+import { BrowserRouter as Router } from "react-router-dom";
+const root = createRoot(document.getElementById("root")!);
+root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <App />
+        </Router>
+      </ThemeProvider>
     </Provider>
   </React.StrictMode>,
-  document.getElementById("root"),
 );
 
 // If you want to start measuring performance in your app, pass a function
