@@ -96,23 +96,38 @@
     linear-gradient(to top, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0) 200px),
     linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 300px);
 }
+.homepage .popular-dishes-frame .popular-section .cards-frame .no-data {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: capitalize;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 34px;
+  color: #e3c08d;
+}
+
 /* FRESH DISHES */
 
-.homepage .fresh-dishes-frame {
+.homepage .new-products-frame {
   width: 100%;
   height: 580px;
   background: #f8f8ff;
   display: flex;
 }
 
-.homepage .fresh-dishes-frame .fresh-section {
+.homepage .new-products-frame .main {
   margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
-.homepage .fresh-dishes-frame .fresh-section .category-title {
+.homepage .new-products-frame .main .category-title {
   text-align: center;
   font-family: "Roboto Serif";
   font-size: 36px;
@@ -123,24 +138,60 @@
   color: #000;
 }
 
-.homepage .fresh-dishes-frame .fresh-section .cards-frame {
+.homepage .new-products-frame .main .cards-frame {
   width: 100%;
-  margin-top: 43px;
-  display: flex;
+  margin: 47px 2px 2px 2px;
   flex-direction: row;
   justify-content: space-between;
 }
-.homepage .fresh-dishes-frame .fresh-section .cards-frame .card {
-  min-height: 350px;
-  min-width: 290px;
-  cursor: pointer;
+.homepage .new-products-frame .main .cards-frame .card {
+  width: 290px;
+  height: 335px;
+  border: none;
 }
-.homepage .fresh-dishes-frame .fresh-section .cards-frame .card .fresh-text {
+.homepage .new-products-frame .main .cards-frame .product-sale {
+  position: absolute;
+  margin-top: 10px;
+  z-index: 100;
+  width: 89px;
+  height: 29px;
+  border-radius: 20px;
+  background: #f19737;
+  color: #f8f8ff;
+  text-align: center;
+  font-family: "Roboto Serif";
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 18px;
+}
+.homepage .new-products-frame .main .cards-frame .card .product-detail {
+  width: 290px;
+  height: 49px;
+  border-radius: 0 0 12px 12px;
+  background: #fafbfb;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+}
+.homepage .new-products-frame .main .cards-frame .card .product-detail .info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.homepage
+  .new-products-frame
+  .main
+  .cards-frame
+  .card
+  .product-detail
+  .info
+  .title {
+  color: #25272d;
   text-align: center;
   font-family: "Roboto Serif";
   font-size: 13px;
@@ -148,15 +199,15 @@
   font-weight: 500;
   line-height: normal;
   letter-spacing: 0.52px;
-
-  color: #25272d;
 }
 .homepage
-  .fresh-dishes-frame
-  .fresh-section
+  .new-products-frame
+  .main
   .cards-frame
   .card
-  .fresh-menu-price {
+  .product-detail
+  .info
+  .price {
   color: #25272d;
   text-align: center;
   font-family: "Roboto Mono";
@@ -166,19 +217,17 @@
   line-height: normal;
   letter-spacing: 0.52px;
 }
-.homepage
-  .fresh-dishes-frame
-  .fresh-section
-  .cards-frame
-  .card
-  .fresh-text-view {
+.homepage .new-products-frame .main .cards-frame .no-data {
+  width: 100%;
+  height: 300px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-family: Roboto;
-  font-size: 12px;
+  align-items: center;
+  text-transform: capitalize;
+  font-family: "Poppins";
   font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  color: #343434;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 34px;
+  color: #e3c08d;
 }

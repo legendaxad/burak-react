@@ -5,7 +5,7 @@ import CardOverflow from "@mui/joy/CardOverflow";
 import Typography from "@mui/joy/Typography";
 import { CssVarsProvider } from "@mui/joy/styles";
 import { Box, Container, Stack } from "@mui/material";
-import { CardCover } from "@mui/joy";
+import { AspectRatio, CardCover } from "@mui/joy";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Divider from "../../components/divider";
 const list = [
@@ -16,65 +16,50 @@ const list = [
 ];
 export default function NewDishes() {
   return (
-    <div className="fresh-dishes-frame">
+    <div className="new-products-frame">
       <Container>
-        <Stack className="fresh-section">
+        <Stack className="main">
           <Box className="category-title">Fresh Menu</Box>
           <Stack className="cards-frame">
-            {list.map((ele, index) => {
-              return (
-                <CssVarsProvider key={index}>
-                  <Card className="card">
-                    <CardCover>
-                      <img src={ele.imagepath} alt={ele.productName} />
-                    </CardCover>
-                    <CardCover className="card-cover" />
-                    <CardContent sx={{ justifyContent: "flex-end" }}>
-                      <Stack
-                        sx={{
-                          justifyContent: "space-between",
-                          flexDirection: "row",
-                        }}
-                      ></Stack>
-                    </CardContent>
-
-                    <CardOverflow
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        borderTop: "1px solid ",
-                        background: "white",
-                        height: "49px",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Stack
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: "10px",
-                        }}
-                      >
-                        <Typography className="fresh-text">
-                          {ele.productName}
-                        </Typography>
-                        <Divider height="24" width="2" bg="#D9D9D9" />
-                        <Typography className="fresh-menu-price">$7</Typography>
+            <CssVarsProvider>
+              {list.length > 0 ? (
+                list.map((ele, index) => (
+                  <Card sx={{ gap: "0px" }} key={index} className="card">
+                    <CardOverflow>
+                      <div className="product-sale">Normal size</div>
+                      <AspectRatio ratio="1">
+                        <img src={ele.imagepath} alt={ele.productName} />
+                      </AspectRatio>
+                    </CardOverflow>
+                    <CardOverflow className="product-detail">
+                      <Stack className="info">
+                        <Stack
+                          flexDirection={"row"}
+                          sx={{ alignItems: "center", gap: "10px" }}
+                        >
+                          <Typography className={"title"}>
+                            {ele.productName}
+                          </Typography>
+                          <Divider width="2" height="24" bg="#d9d9d9" />
+                          <Typography className={"price"}>$12</Typography>
+                        </Stack>
+                        <Stack
+                          flexDirection={"row"}
+                          sx={{ alignItems: "center", gap: "10px" }}
+                        >
+                          <Typography className={"views"}>20</Typography>
+                          <VisibilityIcon
+                            sx={{ fontSize: 20, marginLeft: "5px" }}
+                          ></VisibilityIcon>
+                        </Stack>
                       </Stack>
-                      <Typography className="fresh-text-view">
-                        1{" "}
-                        <VisibilityIcon
-                          sx={{ fontSize: 21, marginLeft: "5px" }}
-                        />
-                      </Typography>
                     </CardOverflow>
                   </Card>
-                </CssVarsProvider>
-              );
-            })}
+                ))
+              ) : (
+                <Box className="no-data">New products are not available</Box>
+              )}
+            </CssVarsProvider>
           </Stack>
         </Stack>
       </Container>
