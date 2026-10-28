@@ -323,11 +323,6 @@
   justify-content: center;
 }
 
-.homepage .active-users-frame .no-data {
-  width: 100%;
-  text-align: center;
-}
-
 /* Responsive design */
 
 @media (max-width: 600px) {
