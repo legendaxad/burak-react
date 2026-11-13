@@ -1,9 +1,25 @@
 import { Box, Button, Container, Stack } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import Basket from "./Basket";
+import { useEffect, useState } from "react";
 
 export default function HomeNavbar() {
-  const authMember = true; // Replace with your authentication logic
+  const authMember = false; // Replace with your authentication logic
+  const [count, setCount] = useState<number>(0);
+  const [value, setValue] = useState<boolean>(true);
+
+  useEffect(() => {
+    console.log(`componentDidMount`); //Data fetch
+    setCount(count + 1);
+    return () => {
+      console.log(`componentWillMount`);
+    };
+  }, [value]);
+  // Handler function to increment the count when the button is clicked
+  const buttonHandler = () => {
+    setValue(!value);
+  };
+
   return (
     <div className="home-navbar">
       <Container className="navbar-container">
@@ -66,10 +82,14 @@ export default function HomeNavbar() {
               World's Most Delicious Cuisine
             </Box>
             <Box className={"wel-text"}>The Choice, not just a choice</Box>
-            <Box className={"service-text"}>24 hours service</Box>
+            <Box className={"service-text"}>{count} hours service</Box>
             <Box className={"signup"}>
               {!authMember ? (
-                <Button variant="contained" className="signup-button">
+                <Button
+                  variant="contained"
+                  className="signup-button"
+                  onClick={buttonHandler}
+                >
                   Sign Up
                 </Button>
               ) : null}
