@@ -10,16 +10,17 @@ import { Dispatch } from "@reduxjs/toolkit";
 // @ts-ignore
 import "../../../css/home.css";
 import { Product } from "../../../lib/types/products";
-import { setPopularDishes } from "./slice";
+import { setNewDishes, setPopularDishes } from "./slice";
 import ProductService from "../../service/ProductService";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 // REDUX SLICE $ SLECTOR
 const actionDispatch = (dispatch: Dispatch) => ({
   setPopularDishes: (data: Product[]) => dispatch(setPopularDishes(data)),
+  setNewDishes: (data: Product[]) => dispatch(setNewDishes(data)),
 });
 
 export default function HomePage() {
-  const { setPopularDishes } = actionDispatch(useDispatch());
+  const { setPopularDishes, setNewDishes } = actionDispatch(useDispatch());
 
   //Selector:Store=>Data
   useEffect(() => {
@@ -33,6 +34,18 @@ export default function HomePage() {
       })
       .then((data) => {
         setPopularDishes(data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    product
+      .getProducts({
+        page: 1,
+        limit: 4,
+        order: "createdAt",
+      })
+      .then((data) => {
+        setNewDishes(data);
       })
       .catch((err) => {
         console.error(err);

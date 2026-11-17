@@ -20,12 +20,6 @@ const popularDishesRetriever = createSelector(
   retrievePopularDishes,
   (popularDishes) => ({ popularDishes }),
 );
-const list = [
-  { productName: "Cutlet", imagepath: "/img/cutlet.webp" },
-  { productName: "Lavash", imagepath: "/img/lavash.webp" },
-  { productName: "Kebab", imagepath: "/img/kebab.webp" },
-  { productName: "Kebab", imagepath: "/img/kebab-fresh.webp" },
-];
 
 export default function PopularDishes() {
   const { popularDishes } = useSelector(popularDishesRetriever);
