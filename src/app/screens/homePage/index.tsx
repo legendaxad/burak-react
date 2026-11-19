@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ActiveUsers from "./ActiveUsers";
 import Advertisement from "./Advertisement";
 import Events from "./Events";
@@ -26,7 +26,24 @@ export default function HomePage() {
   const { setPopularDishes, setNewDishes, setTopUsers } =
     actionDispatch(useDispatch());
 
+  // const [count, setCount] = useState<number>(0);
+
+  // Hook = >Malum bir mantiqni ishga tushurib beruvchi signal va hooklar faqat yozilgan com-t da ishlaydi
+  // useState=> boshlangich malumotlar bosh array boladi
+  // useEffect lifecycle=>ComponentDidMount =>Backend dan malumot olganda kerak
+  // useEffect(() => {}, []) []=> ichiga true false qiymat oladi yani state ozgarsa didMount ishga tushadi
+  // nega Redux => Sababi resourceni yeb qoymaydi qayta qayta req yuborilmaydi
   //Selector:Store=>Data
+
+  // Frontend Architecture
+  // 1 backenddan malumot chaqiramiz useeffect
+  // 2 Reduxga borib joylash
+  // 3 Redux Oqish
+  // 4 Interaction
+
+  /*
+  Redux=>Interface
+  */
   useEffect(() => {
     const product = new ProductService();
     const member = new MemberService();

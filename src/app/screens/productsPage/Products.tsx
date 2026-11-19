@@ -6,6 +6,13 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useState } from "react";
+import { Dispatch } from "@reduxjs/toolkit";
+import { Product } from "../../../lib/types/products";
+import { Member } from "../../../lib/types/member";
+import { createSelector } from "reselect";
+import { setProducts, setRestaurant } from "./slice";
+import { retrieveProducts } from "./selector";
+// REDUX SLICE $ SLECTOR
 const products = [
   {
     productName: "Kebab",
@@ -48,6 +55,15 @@ const products = [
     imagePath: "/img/lavash.webp",
   },
 ];
+const actionDispatch = (dispatch: Dispatch) => ({
+  setRestaurant: (data: Member) => dispatch(setRestaurant(data)),
+  setProducts: (data: Product[]) => dispatch(setProducts(data)),
+});
+
+const productsRetriever = createSelector(retrieveProducts, (products) => ({
+  products,
+}));
+
 export default function Products() {
   const [page, setPage] = useState(1);
   const productsPerPage = 8;

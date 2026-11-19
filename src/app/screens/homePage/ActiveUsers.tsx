@@ -7,15 +7,8 @@ import { createSelector } from "reselect";
 import { retrieveTopUsers } from "./selector";
 import { useSelector } from "react-redux";
 import { serverApi } from "../../../lib/config";
-import { Product } from "../../../lib/types/products";
-import { ProductCollection } from "../../../lib/enums/product.enum";
 import { Member } from "../../../lib/types/member";
-const activeUsers = [
-  { memberNick: "Justin", memberImage: "/img/martin.webp" },
-  { memberNick: "Justin", memberImage: "/img/justin.webp" },
-  { memberNick: "Rose", memberImage: "/img/rose.webp" },
-  { memberNick: "Nusret", memberImage: "/img/nusret.webp" },
-];
+
 const topUsersRetriever = createSelector(retrieveTopUsers, (topUsers) => ({
   topUsers,
 }));

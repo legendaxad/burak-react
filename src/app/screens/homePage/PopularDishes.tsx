@@ -14,7 +14,7 @@ import { retrievePopularDishes } from "./selector";
 import { useSelector } from "react-redux";
 import { serverApi } from "../../../lib/config";
 import { Product } from "../../../lib/types/products";
-// REDUX SLICE $ SLECTOR
+// REDUX  SELECTOR
 
 const popularDishesRetriever = createSelector(
   retrievePopularDishes,
@@ -31,10 +31,10 @@ export default function PopularDishes() {
           <Box className="category-title">Popular Dishes</Box>
           <Stack className="cards-frame">
             {popularDishes.length > 0 ? (
-              popularDishes.map((ele: Product, index) => {
+              popularDishes.map((ele: Product) => {
                 const imagePath = `${serverApi}/${ele.productImages[0]}`;
                 return (
-                  <CssVarsProvider key={index}>
+                  <CssVarsProvider key={ele._id}>
                     <Card className="card">
                       <CardCover>
                         <img src={imagePath} alt={ele.productName} />

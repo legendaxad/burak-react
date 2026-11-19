@@ -4,6 +4,7 @@ import { Product } from "./products";
 // REACT APP STATE
 export interface AppRootState {
   homePage: HomePageState;
+  productsPage: ProductsPageState;
 }
 
 // HOMEPAGE
@@ -13,4 +14,9 @@ export interface HomePageState {
   topUsers: Member[];
 }
 // PRODUCT PAGE
+export interface ProductsPageState {
+  restauramt: Member | null;
+  chosenProduct: Product | null;
+  products: Product[];
+}
 // ORDERS PAGE
