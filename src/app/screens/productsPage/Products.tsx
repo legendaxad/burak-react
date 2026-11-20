@@ -1,62 +1,33 @@
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Button,
+  Container,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dispatch } from "@reduxjs/toolkit";
 import { Product } from "../../../lib/types/products";
-import { Member } from "../../../lib/types/member";
 import { createSelector } from "reselect";
-import { setProducts, setRestaurant } from "./slice";
+import { setProducts } from "./slice";
 import { retrieveProducts } from "./selector";
+import ProductService from "../../service/ProductService";
+import { ProductCollection } from "../../../lib/enums/product.enum";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { serverApi } from "../../../lib/config";
 // REDUX SLICE $ SLECTOR
-const products = [
-  {
-    productName: "Kebab",
-    imagePath: "/img/kebab-fresh.webp",
-  },
-  {
-    productName: "Cutlet",
-    imagePath: "/img/cutlet.webp",
-  },
-  {
-    productName: "Kebab",
-    imagePath: "/img/kebab-fresh.webp",
-  },
-  {
-    productName: "Kebab",
-    imagePath: "/img/kebab.webp",
-  },
-  {
-    productName: "Lavash",
-    imagePath: "/img/lavash.webp",
-  },
-  {
-    productName: "Kebab",
-    imagePath: "/img/kebab-fresh.webp",
-  },
-  {
-    productName: "Cutlet",
-    imagePath: "/img/cutlet.webp",
-  },
-  {
-    productName: "Kebab",
-    imagePath: "/img/kebab-fresh.webp",
-  },
-  {
-    productName: "Kebab",
-    imagePath: "/img/kebab.webp",
-  },
-  {
-    productName: "Lavash",
-    imagePath: "/img/lavash.webp",
-  },
-];
+
 const actionDispatch = (dispatch: Dispatch) => ({
-  setRestaurant: (data: Member) => dispatch(setRestaurant(data)),
   setProducts: (data: Product[]) => dispatch(setProducts(data)),
 });
 
@@ -65,6 +36,24 @@ const productsRetriever = createSelector(retrieveProducts, (products) => ({
 }));
 
 export default function Products() {
+  const { setProducts } = actionDispatch(useDispatch());
+  const { products } = useSelector(productsRetriever);
+  useEffect(() => {
+    const product = new ProductService();
+    product
+      .getProducts({
+        page: 1,
+        limit: 8,
+        order: "createdAt",
+        productCollection: ProductCollection.DISH,
+        search: "",
+      })
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const [page, setPage] = useState(1);
   const productsPerPage = 8;
   const handlePageChange = (
@@ -141,44 +130,58 @@ export default function Products() {
             </Stack>
             <Stack className="product-wrapper">
               {currentProducts.length > 0 ? (
-                currentProducts.map((ele, index) => {
+                currentProducts.map((product, index) => {
+                  const imagePath = `${serverApi}/${product.productImages[0]}`;
+                  const sizeVolume =
+                    product.productCollection === ProductCollection.DRINK
+                      ? product.productVolume + "l"
+                      : product.productSize + " size";
                   return (
-                    <Stack className="product-card">
+                    <Stack className="product-card" key={product._id}>
                       <Stack
                         className="product-img"
                         style={{
                           height: "275px",
-                          backgroundImage: `url(${ele.imagePath})`,
+                          backgroundImage: `url(${imagePath})`,
                         }}
                       >
-                        <div className="product-sale">LARGE size</div>
+                        <div className="product-sale">{sizeVolume}</div>
 
                         <Stack direction="row" className="overlay-buttons">
-                          <Button
-                            size="medium"
-                            variant="text"
-                            className="shop-btn"
-                          >
-                            <ShoppingCartIcon sx={{ color: "#fff" }} />
+                          <Button className={"shop-btn"}>
+                            <img
+                              src={"/icons/shopping-cart.svg"}
+                              style={{ display: "flex" }}
+                              alt=""
+                            />
                           </Button>
-                          <Button
-                            size="medium"
-                            variant="text"
-                            className="view-btn"
-                          >
-                            <VisibilityIcon sx={{ color: "#fff" }} />
+
+                          <Button className={"view-btn"} sx={{ right: "3px" }}>
+                            <Badge
+                              badgeContent={product.productViews}
+                              color="secondary"
+                            >
+                              <RemoveRedEyeIcon
+                                sx={{
+                                  color:
+                                    product.productViews === 0
+                                      ? "gray"
+                                      : "white",
+                                }}
+                              />
+                            </Badge>
                           </Button>
                         </Stack>
                       </Stack>
 
                       <Stack className="product-desc">
                         <Typography className="product-title">
-                          {ele.productName}
+                          {product.productName}
                         </Typography>
 
                         <Box className="price">
                           <img src="/icons/money.svg" alt="" />
-                          <p>15</p>
+                          <p>${product.productPrice}</p>
                         </Box>
                       </Stack>
                     </Stack>
