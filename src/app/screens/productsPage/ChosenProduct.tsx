@@ -71,6 +71,9 @@ export default function ChosenProduct() {
   if (!chosenProduct) {
     return <div>Loading product...</div>;
   }
+  console.log("RESTAURANT DATA:", restaurant);
+  console.log("RESTAURANT NAME:", restaurant?.memberNick);
+  console.log("RESTAURANT PHONE:", restaurant?.memberPhone);
   return (
     <div className={"chosen-product"}>
       <Box className={"title"}>Product Detail</Box>
