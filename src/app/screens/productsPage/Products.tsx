@@ -63,13 +63,6 @@ export default function Products() {
     }
   }, [searchText]);
 
-  const productsPerPage = 8;
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number,
-  ) => {
-    setPage(value);
-  };
   // HANDLERS
   const searchCollectionHandler = (collection: ProductCollection) => {
     productSearch.page = 1;

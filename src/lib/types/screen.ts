@@ -15,7 +15,7 @@ export interface HomePageState {
 }
 // PRODUCT PAGE
 export interface ProductsPageState {
-  restauramt: Member | null;
+  restaurant: Member | null;
   chosenProduct: Product | null;
   products: Product[];
 }
