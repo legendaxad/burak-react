@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Route, Switch, useLocation } from "react-router-dom";
 import HomePage from "./screens/homePage";
@@ -16,9 +16,22 @@ import "../css/footer.css";
 import HelpPage from "./screens/helpPage";
 import Footer from "./components/footers";
 import useBasket from "./hooks/useBasket";
+import AuthenticationModal from "./auth";
 function App() {
   const location = useLocation();
   const { onAdd, cartItems, onDelete, onDeleteAll, onRemove } = useBasket();
+  const [signupOpen, setSignupOpen] = useState<boolean>(false);
+  const [loginOpen, setLoginOpen] = useState<boolean>(false);
+
+  // HANDLERS
+
+  const handleSignupClose = () => {
+    setSignupOpen(false);
+  };
+  const handleLoginClose = () => {
+    setLoginOpen(false);
+  };
+
   return (
     <>
       {location.pathname === "/" ? (
@@ -57,6 +70,12 @@ function App() {
         </Route>
       </Switch>
       <Footer />
+      <AuthenticationModal
+        signupOpen={signupOpen}
+        loginOpen={loginOpen}
+        handleLoginClose={handleLoginClose}
+        handleSignupClose={handleSignupClose}
+      />
     </>
   );
 }
