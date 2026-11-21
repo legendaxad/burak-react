@@ -9,24 +9,20 @@ interface HomeNavbarProps {
   onDeleteAll: () => void;
   onRemove: (item: CartItem) => void;
   onAdd: (item: CartItem) => void;
+  setSignupOpen: (isOpen: boolean) => void;
+  setLoginOpen: (isOpen: boolean) => void;
 }
 export default function HomeNavbar(props: HomeNavbarProps) {
-  const { cartItems, onDelete, onDeleteAll, onRemove, onAdd } = props;
+  const {
+    cartItems,
+    onDelete,
+    onDeleteAll,
+    onRemove,
+    onAdd,
+    setSignupOpen,
+    setLoginOpen,
+  } = props;
   const authMember = false; // Replace with your authentication logic
-  const [count, setCount] = useState<number>(0);
-  const [value, setValue] = useState<boolean>(true);
-
-  useEffect(() => {
-    console.log(`componentDidMount`); //Data fetch
-    setCount(count + 1);
-    return () => {
-      console.log(`componentWillMount`);
-    };
-  }, [value]);
-  // Handler function to increment the count when the button is clicked
-  const buttonHandler = () => {
-    setValue(!value);
-  };
 
   return (
     <div className="home-navbar">
@@ -76,7 +72,11 @@ export default function HomeNavbar(props: HomeNavbarProps) {
             />
             {!authMember ? (
               <Box>
-                <Button variant="contained" className="login-button">
+                <Button
+                  variant="contained"
+                  className="login-button"
+                  onClick={() => setLoginOpen(true)}
+                >
                   Login
                 </Button>
               </Box>
@@ -96,13 +96,13 @@ export default function HomeNavbar(props: HomeNavbarProps) {
               World's Most Delicious Cuisine
             </Box>
             <Box className={"wel-text"}>The Choice, not just a choice</Box>
-            <Box className={"service-text"}>{count} hours service</Box>
+            <Box className={"service-text"}>24 hours service</Box>
             <Box className={"signup"}>
               {!authMember ? (
                 <Button
                   variant="contained"
                   className="signup-button"
-                  onClick={buttonHandler}
+                  onClick={() => setSignupOpen(true)}
                 >
                   Sign Up
                 </Button>

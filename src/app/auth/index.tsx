@@ -6,6 +6,11 @@ import Fade from "@material-ui/core/Fade";
 import { Fab, Stack, TextField } from "@mui/material";
 import styled from "styled-components";
 import LoginIcon from "@mui/icons-material/Login";
+import { T } from "../../lib/types/common";
+import { Messages } from "../../lib/config";
+import { MemberInput } from "../../lib/types/member";
+import MemberService from "../service/MeberService";
+import { sweetErrorHandling } from "../../lib/sweetAlert";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -40,9 +45,49 @@ interface AuthenticationModalProps {
 export default function AuthenticationModal(props: AuthenticationModalProps) {
   const { signupOpen, loginOpen, handleSignupClose, handleLoginClose } = props;
   const classes = useStyles();
-
+  const [memberNick, setMemberNick] = useState<string>("");
+  const [memberPhone, setMemberPhone] = useState<string>("");
+  const [memberPassword, setMemberPassword] = useState<string>("");
   /** HANDLERS **/
-
+  const handleUserName = (e: T) => {
+    setMemberNick(e.target.value); //atribute name is used to identify the input field, and value is the current value of the input field.
+  };
+  const handlePhone = (e: T) => {
+    setMemberPhone(e.target.value);
+  };
+  const handlePassword = (e: T) => {
+    setMemberPassword(e.target.value);
+  };
+  const handlePasswordKeyDown = (e) => {
+    // Check if the pressed key is "Enter"
+    if (e.key === "Enter" && signupOpen) {
+      handleSignupRequest().then(); // Call the signup request function
+    }
+  };
+  const handleSignupRequest = async () => {
+    try {
+      const isFullfll =
+        memberNick !== "" && memberPhone !== "" && memberPassword !== "";
+      if (!isFullfll) throw new Error(Messages.error3);
+      const signupInput: MemberInput = {
+        memberNick: memberNick,
+        memberPhone: memberPhone,
+        memberPassword: memberPassword,
+      };
+      // Call your signup service here with signupInput
+      console.log("Signup input:", signupInput);
+      const member = new MemberService();
+      const result = await member.signup(signupInput);
+      // Example: await signupService(signupInput);
+      // After successful signup, you can close the modal or show a success message
+      handleSignupClose();
+      // Implement signup logic here
+    } catch (error) {
+      console.error("Signup error:", error);
+      handleSignupClose();
+      sweetErrorHandling(error);
+    }
+  };
   return (
     <div>
       <Modal
@@ -71,22 +116,27 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
                 id="outlined-basic"
                 label="username"
                 variant="outlined"
+                onChange={handleUserName}
               />
               <TextField
                 sx={{ my: "17px" }}
                 id="outlined-basic"
                 label="phone number"
                 variant="outlined"
+                onChange={handlePhone}
               />
               <TextField
                 id="outlined-basic"
                 label="password"
                 variant="outlined"
+                onChange={handlePassword}
+                onKeyDown={handlePasswordKeyDown}
               />
               <Fab
                 sx={{ marginTop: "30px", width: "120px" }}
                 variant="extended"
                 color="primary"
+                onClick={() => handleSignupRequest()}
               >
                 <LoginIcon sx={{ mr: 1 }} />
                 Signup
