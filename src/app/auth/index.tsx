@@ -11,6 +11,7 @@ import { Messages } from "../../lib/config";
 import { LoginInput, MemberInput } from "../../lib/types/member";
 import MemberService from "../service/MeberService";
 import { sweetErrorHandling } from "../../lib/sweetAlert";
+import { useGlobals } from "../hooks/useGlobal";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -48,6 +49,7 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
   const [memberNick, setMemberNick] = useState<string>("");
   const [memberPhone, setMemberPhone] = useState<string>("");
   const [memberPassword, setMemberPassword] = useState<string>("");
+  const { authMember, setAuthMember } = useGlobals(); // You can use the useGlobals hook here if needed
   /** HANDLERS **/
   const handleUserName = (e: T) => {
     setMemberNick(e.target.value); //atribute name is used to identify the input field, and value is the current value of the input field.
@@ -79,6 +81,7 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       console.log("Login input:", loginInput);
       const member = new MemberService();
       const result = await member.login(loginInput);
+      setAuthMember(result); // Save the authenticated member in the global context
       // Example: await loginService(loginInput);
       // After successful login, you can close the modal or show a success message
       handleLoginClose();
@@ -102,6 +105,7 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       console.log("Signup input:", signupInput);
       const member = new MemberService();
       const result = await member.signup(signupInput);
+      setAuthMember(result); // Save the authenticated member in the global context
 
       // Example: await signupService(signupInput);
       // SAVING Athenticated User
@@ -218,7 +222,7 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
                 sx={{ marginTop: "27px", width: "120px" }}
                 variant={"extended"}
                 color={"primary"}
-                onClick={() => handleLoginRequest}
+                onClick={() => handleLoginRequest()}
               >
                 <LoginIcon sx={{ mr: 1 }} />
                 Login
