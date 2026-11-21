@@ -31,7 +31,7 @@ function App() {
   // HANDLERS
   const handleLogoutClick = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget); // Set the anchor element to the clicked button
-  };
+  }; // Handler function to handle the click event for the logout button. It sets the anchor element to the clicked button, which will be used to position the menu.
   const handleCloseLogout = () => setAnchorEl(null); // Close the menu by setting the anchor element to null
   const handleLogoutRequest = async () => {
     try {
@@ -43,13 +43,13 @@ function App() {
       console.log(err);
       sweetErrorHandling(Messages.error1);
     }
-  };
+  }; // Handler function to handle the logout request. It calls the logout method from the MemberService, shows a success alert, and clears the authMember state. If an error occurs, it logs the error and shows an error alert.
   const handleSignupClose = () => {
     setSignupOpen(false);
-  };
+  }; // Handler function to close the signup modal by setting the signupOpen state to false
   const handleLoginClose = () => {
     setLoginOpen(false);
-  };
+  }; // Handler function to close the login modal by setting the loginOpen state to false
 
   return (
     <>

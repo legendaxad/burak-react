@@ -49,7 +49,7 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
   const [memberNick, setMemberNick] = useState<string>("");
   const [memberPhone, setMemberPhone] = useState<string>("");
   const [memberPassword, setMemberPassword] = useState<string>("");
-  const { authMember, setAuthMember } = useGlobals(); // You can use the useGlobals hook here if needed
+  const { setAuthMember } = useGlobals(); // You can use the useGlobals hook here if needed
   /** HANDLERS **/
   const handleUserName = (e: T) => {
     setMemberNick(e.target.value); //atribute name is used to identify the input field, and value is the current value of the input field.
