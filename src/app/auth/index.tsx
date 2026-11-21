@@ -8,7 +8,7 @@ import styled from "styled-components";
 import LoginIcon from "@mui/icons-material/Login";
 import { T } from "../../lib/types/common";
 import { Messages } from "../../lib/config";
-import { MemberInput } from "../../lib/types/member";
+import { LoginInput, MemberInput } from "../../lib/types/member";
 import MemberService from "../service/MeberService";
 import { sweetErrorHandling } from "../../lib/sweetAlert";
 
@@ -58,10 +58,34 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
   const handlePassword = (e: T) => {
     setMemberPassword(e.target.value);
   };
-  const handlePasswordKeyDown = (e) => {
+  const handlePasswordKeyDown = (e: T) => {
     // Check if the pressed key is "Enter"
     if (e.key === "Enter" && signupOpen) {
       handleSignupRequest().then(); // Call the signup request function
+    } else if (e.key === "Enter" && loginOpen) {
+      // Call the login request function (you need to implement this)
+      handleLoginRequest().then();
+    }
+  };
+  const handleLoginRequest = async () => {
+    try {
+      const isFullfll = memberNick !== "" && memberPassword !== "";
+      if (!isFullfll) throw new Error(Messages.error3);
+      const loginInput: LoginInput = {
+        memberNick: memberNick,
+        memberPassword: memberPassword,
+      };
+      // Call your login service here with loginInput
+      console.log("Login input:", loginInput);
+      const member = new MemberService();
+      const result = await member.login(loginInput);
+      // Example: await loginService(loginInput);
+      // After successful login, you can close the modal or show a success message
+      handleLoginClose();
+    } catch (error) {
+      console.error("Login error:", error);
+      handleLoginClose();
+      sweetErrorHandling(error).then();
     }
   };
   const handleSignupRequest = async () => {
@@ -78,14 +102,16 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       console.log("Signup input:", signupInput);
       const member = new MemberService();
       const result = await member.signup(signupInput);
+
       // Example: await signupService(signupInput);
+      // SAVING Athenticated User
       // After successful signup, you can close the modal or show a success message
       handleSignupClose();
       // Implement signup logic here
     } catch (error) {
       console.error("Signup error:", error);
       handleSignupClose();
-      sweetErrorHandling(error);
+      sweetErrorHandling(error).then();
     }
   };
   return (
@@ -178,17 +204,21 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
                 label="username"
                 variant="outlined"
                 sx={{ my: "10px" }}
+                onChange={handleUserName}
               />
               <TextField
                 id={"outlined-basic"}
                 label={"password"}
                 variant={"outlined"}
                 type={"password"}
+                onChange={handlePassword}
+                onKeyDown={handlePasswordKeyDown}
               />
               <Fab
                 sx={{ marginTop: "27px", width: "120px" }}
                 variant={"extended"}
                 color={"primary"}
+                onClick={() => handleLoginRequest}
               >
                 <LoginIcon sx={{ mr: 1 }} />
                 Login

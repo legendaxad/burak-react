@@ -1,6 +1,6 @@
 import { serverApi } from "../../lib/config";
 import axios from "axios";
-import { Member, MemberInput } from "../../lib/types/member";
+import { LoginInput, Member, MemberInput } from "../../lib/types/member";
 
 class MemberService {
   private readonly path: string;
@@ -42,7 +42,7 @@ class MemberService {
       throw err;
     }
   }
-  public async login(input: MemberInput): Promise<Member> {
+  public async login(input: LoginInput): Promise<Member> {
     try {
       let url = this.path + "/member/login";
       const result = await axios.post(url, input, { withCredentials: true });
