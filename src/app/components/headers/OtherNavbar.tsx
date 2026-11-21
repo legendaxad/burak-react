@@ -4,9 +4,13 @@ import Basket from "./Basket";
 import { CartItem } from "../../../lib/types/search";
 interface OtherNavbarProps {
   cartItems: CartItem[];
+  onDelete: (item: CartItem) => void;
+  onDeleteAll: () => void;
+  onRemove: (item: CartItem) => void;
+  onAdd: (item: CartItem) => void;
 }
 export default function OtherNavbar(props: OtherNavbarProps) {
-  const { cartItems } = props;
+  const { cartItems, onDelete, onDeleteAll, onRemove, onAdd } = props;
   const authMember = true; // Replace with your authentication logic
   return (
     <div className="other-navbar">
@@ -45,7 +49,13 @@ export default function OtherNavbar(props: OtherNavbarProps) {
                 Help
               </NavLink>
             </Box>
-            <Basket cartItems={cartItems} />
+            <Basket
+              cartItems={cartItems}
+              onDelete={onDelete}
+              onDeleteAll={onDeleteAll}
+              onRemove={onRemove}
+              onAdd={onAdd}
+            />
             {!authMember ? (
               <Box>
                 <Button variant="contained" className="login-button">
