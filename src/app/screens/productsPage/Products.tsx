@@ -12,7 +12,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import SearchIcon from "@mui/icons-material/Search";
-
 import { ChangeEvent, useEffect, useState } from "react";
 import { Dispatch } from "@reduxjs/toolkit";
 import { Product, ProductInquiry } from "../../../lib/types/products";
@@ -25,8 +24,11 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { serverApi } from "../../../lib/config";
 import { useHistory } from "react-router-dom";
+import { CartItem } from "../../../lib/types/search";
 // REDUX SLICE $ SLECTOR
-
+interface ProductsProps {
+  onAdd: (item: CartItem) => void;
+}
 const actionDispatch = (dispatch: Dispatch) => ({
   setProducts: (data: Product[]) => dispatch(setProducts(data)),
 });
@@ -35,7 +37,8 @@ const productsRetriever = createSelector(retrieveProducts, (products) => ({
   products,
 }));
 
-export default function Products() {
+export default function Products(props: ProductsProps) {
+  const { onAdd } = props;
   const { setProducts } = actionDispatch(useDispatch());
   const { products } = useSelector(productsRetriever);
   const history = useHistory();
@@ -262,7 +265,19 @@ export default function Products() {
                         <div className="product-sale">{sizeVolume}</div>
 
                         <Stack direction="row" className="overlay-buttons">
-                          <Button className={"shop-btn"}>
+                          <Button
+                            className={"shop-btn"}
+                            onClick={(e) => {
+                              onAdd({
+                                _id: product._id,
+                                quantity: 1,
+                                name: product.productName,
+                                price: product.productPrice,
+                                image: product.productImages[0],
+                              });
+                              e.stopPropagation();
+                            }}
+                          >
                             <img
                               src={"/icons/shopping-cart.svg"}
                               style={{ display: "flex" }}

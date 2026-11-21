@@ -27,7 +27,10 @@ import ProductService from "../../service/ProductService";
 import MemberService from "../../service/MeberService";
 import { useDispatch, useSelector } from "react-redux";
 import { serverApi } from "../../../lib/config";
-
+import { CartItem } from "../../../lib/types/search";
+interface ChosenProductsProps {
+  onAdd: (item: CartItem) => void;
+}
 const actionDispatch = (dispatch: Dispatch) => ({
   setRestaurant: (data: Member) => dispatch(setRestaurant(data)),
   setChosenProduct: (data: Product) => dispatch(setChosenProduct(data)),
@@ -45,7 +48,8 @@ const restaurantRetriever = createSelector(
     restaurant,
   }),
 );
-export default function ChosenProduct() {
+export default function ChosenProduct(props: ChosenProductsProps) {
+  const { onAdd } = props;
   const { productId } = useParams<{ productId: string }>();
   const { setChosenProduct, setRestaurant } = actionDispatch(useDispatch());
   const { chosenProduct } = useSelector(chosenProductsRetriever);
@@ -71,9 +75,7 @@ export default function ChosenProduct() {
   if (!chosenProduct) {
     return <div>Loading product...</div>;
   }
-  console.log("RESTAURANT DATA:", restaurant);
-  console.log("RESTAURANT NAME:", restaurant?.memberNick);
-  console.log("RESTAURANT PHONE:", restaurant?.memberPhone);
+
   return (
     <div className={"chosen-product"}>
       <Box className={"title"}>Product Detail</Box>

@@ -2,8 +2,12 @@ import { Box, Button, Container, Stack } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import Basket from "./Basket";
 import { useEffect, useState } from "react";
-
-export default function HomeNavbar() {
+import { CartItem } from "../../../lib/types/search";
+interface HomeNavbarProps {
+  cartItems: CartItem[];
+}
+export default function HomeNavbar(props: HomeNavbarProps) {
+  const { cartItems } = props;
   const authMember = false; // Replace with your authentication logic
   const [count, setCount] = useState<number>(0);
   const [value, setValue] = useState<boolean>(true);
@@ -59,7 +63,7 @@ export default function HomeNavbar() {
                 Help
               </NavLink>
             </Box>
-            <Basket />
+            <Basket cartItems={cartItems} />
             {!authMember ? (
               <Box>
                 <Button variant="contained" className="login-button">
