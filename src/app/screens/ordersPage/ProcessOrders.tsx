@@ -2,76 +2,68 @@ import React from "react";
 import { Box, Stack, Button } from "@mui/material";
 import TabPanel from "@mui/lab/TabPanel";
 import moment from "moment";
+import { createSelector } from "reselect";
+import { useSelector } from "react-redux";
+import { serverApi } from "../../../lib/config";
+import { Product } from "../../../lib/types/products";
+import { Order, OrderItem } from "../../../lib/types/order";
+import { retrieveProcessOrders } from "./selector";
+// REDUX  SELECTOR
 
-const products = [
-  {
-    id: 1,
-    productName: "Kebab",
-    imagePath: "/img/kebab-fresh.webp",
-    price: 11,
-    quantity: 2,
-  },
-  {
-    id: 2,
-    productName: "Cutlet",
-    imagePath: "/img/cutlet.webp",
-    price: 11,
-    quantity: 2,
-  },
-  {
-    id: 3,
-    productName: "Lavash",
-    imagePath: "/img/lavash.webp",
-    price: 11,
-    quantity: 2,
-  },
-];
-
-const orders = [{ id: 1, deliveryCost: 2, createdAt: new Date() }];
-
+const processOrdersRetriever = createSelector(
+  retrieveProcessOrders,
+  (processOrders) => ({ processOrders }),
+);
 export default function ProcessOrders() {
+  const { processOrders } = useSelector(processOrdersRetriever);
   return (
     <TabPanel value="2">
       <Stack>
-        {orders.length > 0 ? (
-          orders.map((order) => {
-            const productTotal = products.reduce(
-              (total, product) => total + product.price * product.quantity,
-              0,
-            );
-
-            const totalPrice = productTotal + order.deliveryCost;
-
+        {processOrders.length > 0 ? (
+          processOrders.map((order: Order) => {
             return (
-              <Box key={order.id} className="order-main-box">
+              <Box key={order._id} className="order-main-box">
                 <Box className="order-box-scroll">
-                  {products.map((product) => (
-                    <Box key={product.id} className="orders-name-price">
-                      <img
-                        src={product.imagePath}
-                        alt={product.productName}
-                        className="order-dish-img"
-                      />
+                  {order.orderItems.map((item: OrderItem) => {
+                    const product: Product = order.productData.filter(
+                      (ele: Product) => ele._id === item.productId,
+                    )[0];
+                    const imagePath = `${serverApi}/${product.productImages[0]}`;
+                    return (
+                      <Box key={product._id} className="orders-name-price">
+                        <img
+                          src={imagePath}
+                          alt={product.productName}
+                          className="order-dish-img"
+                        />
 
-                      <p className="title-dish">{product.productName}</p>
+                        <p className="title-dish">{product.productName}</p>
 
-                      <Box className="price-box">
-                        <p>${product.price}</p>
-                        <img src="/icons/close.svg" alt="" />
-                        <p>{product.quantity}</p>
-                        <img src="/icons/pause.svg" alt="" />
-                        <p style={{ marginLeft: "15px" }}>
-                          ${product.price * product.quantity}
-                        </p>
+                        <Box className="price-box">
+                          <p>${item.itemPrice}</p>
+                          <img src="/icons/close.svg" alt="" />
+                          <p>{item.itemQuantity}</p>
+                          <img src="/icons/pause.svg" alt="" />
+                          <p style={{ marginLeft: "15px" }}>
+                            ${item.itemPrice * item.itemQuantity}
+                          </p>
+                        </Box>
                       </Box>
-                    </Box>
-                  ))}
+                    );
+                  })}
                 </Box>
 
                 <Box className="total-price-box">
                   <Box className="box-total">
                     <p>Product price</p>
-                    <p>${productTotal}</p>
+                    <p>
+                      $
+                      {order.orderItems.reduce(
+                        (total, item) =>
+                          total + item.itemPrice * item.itemQuantity,
+                        0,
+                      )}
+                    </p>
 
                     <img
                       src="/icons/plus.svg"
@@ -80,7 +72,7 @@ export default function ProcessOrders() {
                     />
 
                     <p>Delivery cost</p>
-                    <p>${order.deliveryCost}</p>
+                    <p>${order.orderDelivery}</p>
 
                     <img
                       src="/icons/pause.svg"
@@ -89,7 +81,14 @@ export default function ProcessOrders() {
                     />
 
                     <p>Total</p>
-                    <p>${totalPrice}</p>
+                    <p>
+                      $
+                      {order.orderItems.reduce(
+                        (total, item) =>
+                          total + item.itemPrice * item.itemQuantity,
+                        0,
+                      ) + order.orderDelivery}
+                    </p>
                   </Box>
 
                   <p className="data-compl">

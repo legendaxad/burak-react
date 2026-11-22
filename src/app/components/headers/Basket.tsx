@@ -20,8 +20,10 @@ import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import { useHistory } from "react-router-dom";
 import { CartItem } from "../../../lib/types/search";
-import { serverApi } from "../../../lib/config";
-
+import { Messages, serverApi } from "../../../lib/config";
+import { sweetErrorHandling } from "../../../lib/sweetAlert";
+import { useGlobals } from "../../hooks/useGlobal";
+import OrderService from "../../service/OrderService";
 interface BasketProps {
   cartItems: CartItem[];
   onDelete: (item: CartItem) => void;
@@ -37,7 +39,7 @@ const money = (n: number) => `$${n.toFixed(2)}`;
 
 export default function Basket(props: BasketProps) {
   const { cartItems, onDelete, onDeleteAll, onRemove, onAdd } = props;
-  const authMember = null;
+  const { authMember } = useGlobals();
   const history = useHistory();
 
   /** CALCULATIONS **/
@@ -68,7 +70,19 @@ export default function Basket(props: BasketProps) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const proceedOrderHandler = async () => {
+    try {
+      if (!authMember) throw new Error(Messages.error2);
+      const order = new OrderService();
+      await order.createOrder(cartItems);
+      onDeleteAll();
+      history.push("/orders");
+      // refresh via context provider
+    } catch (err) {
+      console.log(err);
+      sweetErrorHandling(err).then();
+    }
+  };
   return (
     <Box className={"hover-line"}>
       <IconButton
@@ -372,6 +386,7 @@ export default function Basket(props: BasketProps) {
                     py: 1.25,
                     boxShadow: "none",
                   }}
+                  onClick={proceedOrderHandler}
                 >
                   Checkout · {money(totalPrice)}
                 </Button>
