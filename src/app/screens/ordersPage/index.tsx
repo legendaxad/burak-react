@@ -5,9 +5,6 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import TabPanel from "@mui/lab/TabPanel";
-
-// @ts-ignore
-import "../../../css/order.css";
 import PausedOrders from "./PausedOrders";
 import ProcessOrders from "./ProcessOrders";
 import FinishedOrders from "./FinishedOrders";
@@ -17,6 +14,9 @@ import { setFinishedOrders, setPausedOrders, setProcessOrders } from "./slice";
 import { Order, OrderInquiry } from "../../../lib/types/order";
 import { OrderStatus } from "../../../lib/enums/order.enum";
 import OrderService from "../../service/OrderService";
+import { useGlobals } from "../../hooks/useGlobal";
+// @ts-ignore
+import "../../../css/order.css";
 // REDUX SLICE $ SLECTOR
 const actionDispatch = (dispatch: Dispatch) => ({
   setPausedOrders: (data: Order[]) => dispatch(setPausedOrders(data)),
@@ -24,6 +24,7 @@ const actionDispatch = (dispatch: Dispatch) => ({
   setFinishedOrders: (data: Order[]) => dispatch(setFinishedOrders(data)),
 });
 export default function OrdersPage() {
+  const { orderBuilder } = useGlobals();
   const { setPausedOrders, setProcessOrders, setFinishedOrders } =
     actionDispatch(useDispatch());
 
@@ -34,6 +35,8 @@ export default function OrdersPage() {
     orderStatus: OrderStatus.PAUSE,
   });
   useEffect(() => {
+    console.log("ORDER BUILDER CHANGED:", orderBuilder);
+
     const order = new OrderService();
     order
       .getMyOrders({ ...orderInquiry, orderStatus: OrderStatus.PAUSE })
@@ -59,7 +62,7 @@ export default function OrdersPage() {
       .catch((err) => {
         console.error("Error fetching finished orders:", err);
       });
-  }, [orderInquiry]);
+  }, [orderInquiry, orderBuilder]);
   const handleChange = (e: SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -85,11 +88,11 @@ export default function OrdersPage() {
             </Box>
             <Stack className={"order-main-content"}>
               <TabPanel value="1">
-                <PausedOrders />
+                <PausedOrders setValue={setValue} />
               </TabPanel>
 
               <TabPanel value="2">
-                <ProcessOrders />
+                <ProcessOrders setValue={setValue} />
               </TabPanel>
 
               <TabPanel value="3">
@@ -106,11 +109,13 @@ export default function OrdersPage() {
                 <img
                   src={"/icons/default-user.svg"}
                   className={"order-user-avatar"}
+                  alt=""
                 />
                 <div className={"order-user-icon-box"}>
                   <img
                     src={"/icons/user-badge.svg"}
                     className={"order-user-prof-img"}
+                    alt=""
                   />
                 </div>
               </div>
@@ -159,10 +164,10 @@ export default function OrdersPage() {
               className={"card-input"}
             />
             <div className={"cards-box"}>
-              <img src={"/icons/western-card.svg"} />
-              <img src={"/icons/master-card.svg"} />
-              <img src={"/icons/paypal-card.svg"} />
-              <img src={"/icons/visa-card.svg"} />
+              <img src={"/icons/western-card.svg"} alt="" />
+              <img src={"/icons/master-card.svg"} alt="" />
+              <img src={"/icons/paypal-card.svg"} alt="" />
+              <img alt="" src={"/icons/visa-card.svg"} />
             </div>
           </Box>
         </Stack>

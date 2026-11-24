@@ -5,19 +5,72 @@ import TabPanel from "@mui/lab/TabPanel";
 
 import { createSelector } from "reselect";
 import { useSelector } from "react-redux";
-import { serverApi } from "../../../lib/config";
+import { Messages, serverApi } from "../../../lib/config";
 import { Product } from "../../../lib/types/products";
 import { retrievePausedOrders } from "./selector";
-import { Order, OrderItem } from "../../../lib/types/order";
+import { Order, OrderItem, OrderUpdateInput } from "../../../lib/types/order";
+import { T } from "../../../lib/types/common";
+import { sweetErrorHandling } from "../../../lib/sweetAlert";
+import { OrderStatus } from "../../../lib/enums/order.enum";
+import { useGlobals } from "../../hooks/useGlobal";
+import OrderService from "../../service/OrderService";
 // REDUX  SELECTOR
 
 const pausedOrdersRetriever = createSelector(
   retrievePausedOrders,
   (pausedOrders) => ({ pausedOrders }),
 );
-
-export default function PausedOrders() {
+interface PausedOrdersProps {
+  setValue: (input: string) => void;
+}
+export default function PausedOrders(props: PausedOrdersProps) {
+  const { setValue } = props;
   const { pausedOrders } = useSelector(pausedOrdersRetriever);
+  const { authMember, setorderBuilder } = useGlobals();
+
+  const deleteOrderHandler = async (e: T) => {
+    try {
+      if (!authMember) throw new Error(Messages.error2);
+      const orderId = e.target.value;
+      const input: OrderUpdateInput = {
+        orderId: orderId,
+        orderStatus: OrderStatus.DELETE,
+      };
+      const confirmation = window.confirm("Do you want to delete the order?");
+      if (confirmation) {
+        const order = new OrderService();
+        await order.updateOrder(input);
+        // order REBUILD
+        setorderBuilder(new Date());
+      }
+    } catch (err) {
+      sweetErrorHandling(err).then();
+    }
+  };
+
+  const processOrderHandler = async (e: T) => {
+    try {
+      if (!authMember) throw new Error(Messages.error2);
+      // PAYMENT PROCESS
+      const orderId = e.target.value;
+      const input: OrderUpdateInput = {
+        orderId: orderId,
+        orderStatus: OrderStatus.PROCESS,
+      };
+      const confirmation = window.confirm(
+        "Do you want to proceed with payment?",
+      );
+      if (confirmation) {
+        const order = new OrderService();
+        await order.updateOrder(input);
+        // order REBUILD
+        setValue("2");
+        setorderBuilder(new Date());
+      }
+    } catch (err) {
+      sweetErrorHandling(err).then();
+    }
+  };
   return (
     <TabPanel value="1">
       <Stack>
@@ -66,30 +119,34 @@ export default function PausedOrders() {
                   <p>${order.orderTotal}</p>
                 </Box>
 
-                <Button variant="contained" color="secondary">
+                <Button
+                  value={order._id}
+                  variant="contained"
+                  color="secondary"
+                  onClick={deleteOrderHandler}
+                >
                   Cancel
                 </Button>
 
-                <Button variant="contained">Payment</Button>
+                <Button
+                  value={order._id}
+                  variant="contained"
+                  onClick={processOrderHandler}
+                >
+                  Payment
+                </Button>
               </Box>
             </Box>
           );
         })}
 
         {!pausedOrders || pausedOrders.length === 0 ? (
-          <Box
-            className="no-order-box"
-            display={"flex"}
-            flexDirection={"row"}
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
+          <Box display="flex" flexDirection="row" justifyContent="center">
             <img
-              style={{ width: "300px", height: "300px" }}
-              src="/icons/no-order.svg"
-              alt=""
+              src="/icons/noimage-list.svg"
+              alt="No finished orders"
+              style={{ width: 300, height: 300 }}
             />
-            <p>No paused orders</p>
           </Box>
         ) : null}
       </Stack>

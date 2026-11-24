@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ActiveUsers from "./ActiveUsers";
 import Advertisement from "./Advertisement";
 import Events from "./Events";
@@ -7,14 +7,14 @@ import PopularDishes from "./PopularDishes";
 import Statistics from "./Statistics";
 import { useDispatch } from "react-redux";
 import { Dispatch } from "@reduxjs/toolkit";
-// @ts-ignore
-import "../../../css/home.css";
 import { Product } from "../../../lib/types/products";
 import { setNewDishes, setPopularDishes, setTopUsers } from "./slice";
 import ProductService from "../../service/ProductService";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 import MemberService from "../../service/MeberService";
 import { Member } from "../../../lib/types/member";
+// @ts-ignore
+import "../../../css/home.css";
 // REDUX SLICE $ SLECTOR
 const actionDispatch = (dispatch: Dispatch) => ({
   setPopularDishes: (data: Product[]) => dispatch(setPopularDishes(data)),

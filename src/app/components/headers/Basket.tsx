@@ -39,7 +39,7 @@ const money = (n: number) => `$${n.toFixed(2)}`;
 
 export default function Basket(props: BasketProps) {
   const { cartItems, onDelete, onDeleteAll, onRemove, onAdd } = props;
-  const { authMember } = useGlobals();
+  const { authMember, setorderBuilder } = useGlobals();
   const history = useHistory();
 
   /** CALCULATIONS **/
@@ -76,6 +76,7 @@ export default function Basket(props: BasketProps) {
       const order = new OrderService();
       await order.createOrder(cartItems);
       onDeleteAll();
+      setorderBuilder(new Date());
       history.push("/orders");
       // refresh via context provider
     } catch (err) {

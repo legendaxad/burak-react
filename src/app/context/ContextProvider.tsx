@@ -10,12 +10,16 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       ? JSON.parse(localStorage.getItem("memberData") as string)
       : null,
   ); // Initialize authMember state with memberData from localStorage if available, otherwise set it to null
+  const [orderBuilder, setorderBuilder] = useState<Date>(new Date());
   console.log("ContextProvider authMember:", authMember);
   return (
-    <GlobalContext.Provider value={{ authMember, setAuthMember }}>
+    <GlobalContext.Provider
+      value={{ authMember, setAuthMember, orderBuilder, setorderBuilder }}
+    >
       {children}
     </GlobalContext.Provider> // Provide the authMember and setAuthMember state to the children components through the GlobalContext
   );
 };
 
 export default ContextProvider;
+// 1.23

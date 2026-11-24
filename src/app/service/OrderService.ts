@@ -1,7 +1,12 @@
 import axios from "axios";
 import { serverApi } from "../../lib/config";
 import { CartItem } from "../../lib/types/search";
-import { Order, OrderInquiry, OrderItemInput } from "../../lib/types/order";
+import {
+  Order,
+  OrderInquiry,
+  OrderItemInput,
+  OrderUpdateInput,
+} from "../../lib/types/order";
 class OrderService {
   private readonly path: string;
 
@@ -31,6 +36,16 @@ class OrderService {
       const url = `${this.path}/order/all`;
       const query = `?page=${input.page}&limit=${input.limit}&orderStatus=${input.orderStatus}`;
       const response = await axios.get(url + query, { withCredentials: true });
+      return response.data;
+    } catch (error) {
+      console.error("Error retrieving orders:", error);
+      throw error;
+    }
+  }
+  public async updateOrder(input: OrderUpdateInput): Promise<Order[]> {
+    try {
+      const url = `${this.path}/order/update`;
+      const response = await axios.post(url, input, { withCredentials: true });
       return response.data;
     } catch (error) {
       console.error("Error retrieving orders:", error);
