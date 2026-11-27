@@ -63,7 +63,7 @@ export function Settings() {
       sweetErrorHandling(err).then();
     }
   };
-  const handleImageTypes = (e: T) => {
+  const handleImageViewer = (e: T) => {
     const file = e.target.files[0];
     const fileType = file.type,
       validateImageTypes = ["image/jpg", "image/jpeg", "image/png"];
@@ -84,7 +84,7 @@ export function Settings() {
           <span>Upload image</span>
           <p>JPG, JPEG, PNG formats only!</p>
           <div className={"up-del-box"}>
-            <Button component="label" onChange={handleImageTypes}>
+            <Button component="label" onChange={handleImageViewer}>
               <CloudDownloadIcon />
               <input type="file" hidden />
             </Button>
