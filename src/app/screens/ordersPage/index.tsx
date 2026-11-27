@@ -17,6 +17,9 @@ import OrderService from "../../service/OrderService";
 import { useGlobals } from "../../hooks/useGlobal";
 // @ts-ignore
 import "../../../css/order.css";
+import { useHistory } from "react-router-dom";
+import { MemberType } from "../../../lib/enums/member.enums";
+import { serverApi } from "../../../lib/config";
 // REDUX SLICE $ SLECTOR
 const actionDispatch = (dispatch: Dispatch) => ({
   setPausedOrders: (data: Order[]) => dispatch(setPausedOrders(data)),
@@ -24,9 +27,10 @@ const actionDispatch = (dispatch: Dispatch) => ({
   setFinishedOrders: (data: Order[]) => dispatch(setFinishedOrders(data)),
 });
 export default function OrdersPage() {
-  const { orderBuilder } = useGlobals();
+  const { orderBuilder, authMember } = useGlobals();
   const { setPausedOrders, setProcessOrders, setFinishedOrders } =
     actionDispatch(useDispatch());
+  const history = useHistory();
 
   const [value, setValue] = useState("1");
   const [orderInquiry, setOrderInquiry] = useState<OrderInquiry>({
@@ -35,8 +39,6 @@ export default function OrdersPage() {
     orderStatus: OrderStatus.PAUSE,
   });
   useEffect(() => {
-    console.log("ORDER BUILDER CHANGED:", orderBuilder);
-
     const order = new OrderService();
     order
       .getMyOrders({ ...orderInquiry, orderStatus: OrderStatus.PAUSE })
@@ -66,7 +68,7 @@ export default function OrdersPage() {
   const handleChange = (e: SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-
+  if (!authMember) history.push("/");
   return (
     <div className={"order-page"}>
       <Container className="order-container">
@@ -107,27 +109,43 @@ export default function OrdersPage() {
             <Box className={"member-box"}>
               <div className={"order-user-img"}>
                 <img
-                  src={"/icons/default-user.svg"}
+                  src={
+                    authMember?.memberImage
+                      ? `${serverApi}/${authMember.memberImage}`
+                      : "/icons/default-user.svg"
+                  }
                   className={"order-user-avatar"}
                   alt=""
                 />
                 <div className={"order-user-icon-box"}>
                   <img
-                    src={"/icons/user-badge.svg"}
+                    src={
+                      authMember?.memberType === MemberType.RESTAURANT
+                        ? "/icons/restaurant.svg"
+                        : "/icons/user-badge.svg"
+                    }
                     className={"order-user-prof-img"}
                     alt=""
                   />
                 </div>
               </div>
-              <span className={"order-user-name"}>Martin</span>
-              <span className={"order-user-prof"}>User</span>
+              <span className={"order-user-name"}>
+                {authMember?.memberNick}
+              </span>
+              <span className={"order-user-prof"}>
+                {authMember?.memberType}
+              </span>
             </Box>
             <Box className={"liner"}></Box>
             <Box className={"order-user-address"}>
               <div style={{ display: "flex" }}>
                 <LocationOnIcon />
               </div>
-              <div className={"spec-address-txt"}>Do not exist</div>
+              <div className={"spec-address-txt"}>
+                {authMember?.memberAddress
+                  ? authMember.memberAddress
+                  : "do not exist"}
+              </div>
             </Box>
           </Box>
           <Box className={"order-info-box"} sx={{ mt: "15px" }}>

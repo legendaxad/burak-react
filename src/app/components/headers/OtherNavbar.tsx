@@ -99,7 +99,7 @@ export default function OtherNavbar(props: OtherNavbarProps) {
                 alt=""
                 src={
                   authMember?.memberImage
-                    ? `${serverApi}/uploads/members/${authMember.memberImage}`
+                    ? `${serverApi}/${authMember.memberImage}`
                     : "/icons/default-user.svg"
                 }
                 aria-haspopup="true"
